@@ -46,26 +46,48 @@ class Downloader(object):
 
 class Browscap(object):
 
+    regex_cache = {}
     cache = {}
 
-    def __init__(self, defaults, data_dict):
-        self.defaults = defaults
-        self.data     = data_dict
+    def __init__(self, data_dict, regex_cache):
+        self.data        = data_dict
+        self.regex_cache = regex_cache
 
     def search(self, user_agent_string):
         user_agent_string = '[%s]' % user_agent_string
 
-        ua_regex_pattern = ''
-        for ua_regex, line in self.data.iteritems():
-            if ua_regex.match(user_agent_string) and len(ua_regex.pattern) > len(ua_regex_pattern):
-                ua_regex_pattern = ua_regex.pattern
-        if ua_regex_pattern == '':
+        ua_regex_string = ''
+        for ua_pattern in self.regex_cache:
+            if ua_pattern.match(user_agent_string) and len(ua_pattern.pattern) > len(ua_regex_string):
+                ua_regex_string = ua_pattern.pattern
+        if ua_regex_string == '':
             return None
         else:
-            ua_regex = re.compile(ua_regex)
-            return Browser(self.defaults, self.data[ua_regex])
+            return Browser(self.data[ua_regex_string])
 
 def load_file(browscap_file_path):
+    def replace_defaults(line, defaults):
+        new_line = {}
+        for feature, value in line.iteritems():
+            if value == 'default':
+                value = defaults[feature]
+            if value == 'true':
+                value = True
+            if value == 'false':
+                value = False
+            if feature == 'MajorVersion' or feature == 'MinorVersion':
+                try:
+                    value = int(value)
+                except Exception:
+                    value = 0
+            if feature == 'CSSVersion' or feature == 'AolVersion':
+                try:
+                    value = float(value)
+                except Exception:
+                    value = 0.0
+            new_line[feature.lower()] = value
+        return new_line
+    
     with open(browscap_file_path, 'rb') as csvfile:
         log.info('Reading browscap source file')
         dialect = csv.Sniffer().sniff(csvfile.read(4096))
@@ -73,22 +95,27 @@ def load_file(browscap_file_path):
         log.info('Removing fileinfo section')
         csvfile.readline()
         csvfile.readline()
-        reader = csv.DictReader(csvfile, dialect=dialect)
-        defaults = {}
+        reader        = csv.DictReader(csvfile, dialect=dialect)
+        defaults      = {}
         browscap_data = {}
+        regex_cache   = []
         for line in reader:
-            if reader.line_num == 2:
+            if line['Parent'] == 'DefaultProperties':
+                continue
+            if '[%s]' % line['Parent'] == line['UserAgent']:
                 defaults = line
                 continue
-            ua_regex = line['UserAgent']
+            line = replace_defaults(line, defaults)
+            ua_regex = line['useragent']
             for unsafe_char in '^$()[].-':
                 ua_regex = ua_regex.replace(unsafe_char, '\%s' % unsafe_char)
             ua_regex = ua_regex.replace('?', '.').replace('*', '.*?')
             ua_regex = '^%s$' % ua_regex
-            browscap_data.update({re.compile(ua_regex): line})
-    return Browscap(defaults, browscap_data)
+            browscap_data.update({ua_regex: line})
+            regex_cache.append(re.compile(ua_regex))
+    return Browscap(browscap_data, regex_cache)
 
 
 browscap = load_file('/var/projects/python/pybrowscap/browscap.csv')
-browser = browscap.search('[Mozilla/5.0 (X11; U; Linux i686; de; rv:1.8.0.5) Gecko/20060731 Ubuntu/dapper-security Firefox/1.5.0.5]')
-print browser.name()
+browser = browscap.search('Mozilla/5.0 (X11; Linux i686 on x86_64; rv:5.0a2) Gecko/20110524 Firefox/5.0a2')
+print repr(browser.features())

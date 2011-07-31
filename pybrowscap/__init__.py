@@ -2,44 +2,42 @@ __version__ = '1.0b1'
 
 class Browser(object):
 
-    def __init__(self, defaults, user_agent):
-        self.user_agent = {}
-        for feature, value in user_agent.iteritems():
-            if value == 'default':
-                value = defaults[feature]
-            if value == 'true':
-                value = True
-            if value == 'false':
-                value = False
-            if feature.lower() == 'majorversion' or feature.lower() == 'minorversion':
-                try:
-                    value = int(value)
-                except Exception:
-                    value = 0
-            if feature.lower() == 'cssversion':
-                value = float(value)
-            self.user_agent[feature.lower()] = value
+    def __init__(self, user_agent):
+        self.user_agent = user_agent
+
+    def get(self, feature, default=None):
+        return self.user_agent.get(feature, default)
 
     def name(self):
-        return self.user_agent.get('browser')
+        return self.get('browser')
 
     def category(self):
-        return self.user_agent.get('parent')
+        return self.get('parent')
+
+    def platform(self):
+        return self.get('platform')
+
+    def aol_version(self):
+        return self.get('aolversion')
 
     def version(self):
-        return self.user_agent.get('version')
+        return self.get('version')
 
     def version_major(self):
-        return int(self.user_agent.get('majorversion', 0))
+        return int(self.get('majorversion', 0))
 
     def version_minor(self):
-        return int(self.user_agent.get('minorversion', 0))
+        return int(self.get('minorversion', 0))
 
     def css_version(self):
-        return int(self.user_agent.get('cssversion', 0))
+        return int(self.get('cssversion', 0))
 
     def supports(self, feature):
-        return self.user_agent.get(feature, False)
+        to_return = self.get(feature, False)
+        if isinstance(to_return, bool):
+            return to_return
+        else:
+            return False
 
     def supports_tables(self):
         return self.supports('tables')
