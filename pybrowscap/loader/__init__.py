@@ -1,4 +1,5 @@
 from pybrowscap import Browser
+from decimal import Decimal
 import logging
 import urllib2
 import csv
@@ -85,11 +86,11 @@ def load_file(browscap_file_path):
                     value = int(value)
                 except Exception:
                     value = 0
-            if feature == 'CSSVersion' or feature == 'AolVersion':
+            if feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version':
                 try:
-                    value = float(value)
+                    value = Decimal(value)
                 except Exception:
-                    value = 0.0
+                    value = Decimal('0.0')
             new_line[feature.lower()] = value
         return new_line
     try:

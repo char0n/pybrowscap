@@ -10,7 +10,7 @@ class DownloaderTest(unittest.TestCase):
         self.original_url  = Downloader.url
         Downloader.url     = 'http://www.codescale.net/en/'
         self.downloader    = Downloader()
-        self.new_file_path = os.getcwd()+os.sep+'browscap.csv'
+        self.new_file_path = os.path.dirname(__file__)+os.sep+'data'+os.sep+'tmp'+'browscap.csv'
 
     def tearDown(self):
         Downloader.url    = self.original_url
@@ -32,3 +32,6 @@ class DownloaderTest(unittest.TestCase):
     def test_download_get_contents(self):
         contents = self.downloader.get()
         self.assertNotEqual(contents.find('Software Development Done Right'), -1)
+
+if __name__ == '__main__':
+    unittest.main()

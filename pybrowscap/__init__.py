@@ -5,6 +5,9 @@ class Browser(object):
     def __init__(self, user_agent):
         self.user_agent = user_agent
 
+    def items(self):
+        return self.user_agent.copy()
+
     def get(self, feature, default=None):
         return self.user_agent.get(feature, default)
 
@@ -24,13 +27,13 @@ class Browser(object):
         return self.get('version')
 
     def version_major(self):
-        return int(self.get('majorversion', 0))
+        return self.get('majorversion', 0)
 
     def version_minor(self):
-        return int(self.get('minorversion', 0))
+        return self.get('minorversion', 0)
 
     def css_version(self):
-        return int(self.get('cssversion', 0))
+        return self.get('cssversion', 0)
 
     def supports(self, feature):
         to_return = self.get(feature, False)
