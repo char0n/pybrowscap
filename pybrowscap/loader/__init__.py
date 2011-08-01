@@ -92,30 +92,33 @@ def load_file(browscap_file_path):
                     value = 0.0
             new_line[feature.lower()] = value
         return new_line
-    
-    with open(browscap_file_path, 'rb') as csvfile:
-        log.info('Reading browscap source file')
-        dialect = csv.Sniffer().sniff(csvfile.read(4096))
-        csvfile.seek(0)
-        log.info('Removing fileinfo section')
-        csvfile.readline()
-        csvfile.readline()
-        reader        = csv.DictReader(csvfile, dialect=dialect)
-        defaults      = {}
-        browscap_data = {}
-        regex_cache   = []
-        for line in reader:
-            if line['Parent'] == 'DefaultProperties':
-                continue
-            if '[%s]' % line['Parent'] == line['UserAgent']:
-                defaults = line
-                continue
-            line = replace_defaults(line, defaults)
-            ua_regex = line['useragent']
-            for unsafe_char in '^$()[].-':
-                ua_regex = ua_regex.replace(unsafe_char, '\%s' % unsafe_char)
-            ua_regex = ua_regex.replace('?', '.').replace('*', '.*?')
-            ua_regex = '^%s$' % ua_regex
-            browscap_data.update({ua_regex: line})
-            regex_cache.append(re.compile(ua_regex))
-    return Browscap(browscap_data, regex_cache)
+    try:
+        with open(browscap_file_path, 'rb') as csvfile:
+            log.info('Reading browscap source file')
+            dialect = csv.Sniffer().sniff(csvfile.read(4096))
+            csvfile.seek(0)
+            log.info('Removing fileinfo section')
+            csvfile.readline()
+            csvfile.readline()
+            reader        = csv.DictReader(csvfile, dialect=dialect)
+            defaults      = {}
+            browscap_data = {}
+            regex_cache   = []
+            for line in reader:
+                if line['Parent'] == 'DefaultProperties':
+                    continue
+                if '[%s]' % line['Parent'] == line['UserAgent']:
+                    defaults = line
+                    continue
+                line = replace_defaults(line, defaults)
+                ua_regex = line['useragent']
+                for unsafe_char in '^$()[].-':
+                    ua_regex = ua_regex.replace(unsafe_char, '\%s' % unsafe_char)
+                ua_regex = ua_regex.replace('?', '.').replace('*', '.*?')
+                ua_regex = '^%s$' % ua_regex
+                browscap_data.update({ua_regex: line})
+                regex_cache.append(re.compile(ua_regex))
+        return Browscap(browscap_data, regex_cache)
+    except Exception:
+        log.exception('Error while reading browscap source file')
+        raise
