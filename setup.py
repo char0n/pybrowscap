@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from setuptools import setup
 import pybrowscap
 import os
@@ -20,6 +21,6 @@ setup(
     url='http://www.codescale.net/en/community#pybrowscap',
     license='BSD',
     keywords = "browser browscap detection user agent",
-    packages=['pybrowscap']
+    packages=['pybrowscap', 'pybrowscap.loader']
 )
 
