@@ -118,8 +118,3 @@ def load_file(browscap_file_path):
             browscap_data.update({ua_regex: line})
             regex_cache.append(re.compile(ua_regex))
     return Browscap(browscap_data, regex_cache)
-
-
-browscap = load_file('/var/projects/python/pybrowscap/browscap.csv')
-browser = browscap.search('Mozilla/5.0 (X11; Linux i686 on x86_64; rv:5.0a2) Gecko/20110524 Firefox/5.0a2')
-print repr(browser.features())
