@@ -56,6 +56,9 @@ class Browscap(object):
     def search(self, user_agent_string):
         user_agent_string = '[%s]' % user_agent_string
 
+        if user_agent_string in self.cache:
+            return Browser(self.cache[user_agent_string])
+
         ua_regex_string = ''
         for ua_pattern in self.regex_cache:
             if ua_pattern.match(user_agent_string) and len(ua_pattern.pattern) > len(ua_regex_string):
@@ -63,6 +66,7 @@ class Browscap(object):
         if ua_regex_string == '':
             return None
         else:
+            self.cache[user_agent_string] = self.data[ua_regex_string]
             return Browser(self.data[ua_regex_string])
 
 def load_file(browscap_file_path):
