@@ -25,6 +25,7 @@ class Downloader(object):
                 for handler in self.additional_handlers:
                     opener.add_handler(handler)
             opener.add_headers = [('User-agent', 'pybrowscap downloader')]
+            urllib2.install_opener(opener)
             response = opener.open(self.url, timeout=self.timeout)
             contents = response.read()
             response.close()
