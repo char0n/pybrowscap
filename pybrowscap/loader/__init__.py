@@ -44,7 +44,6 @@ class Downloader(object):
 
 class Browscap(object):
 
-    regex_cache = {}
     cache = {}
 
     def __init__(self, data_dict, regex_cache):
