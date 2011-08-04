@@ -37,7 +37,8 @@ Automatic updates
 ::
 
  from pybrowscap.loader import Downloader
- Downloader().get(save_to_filepath)
+ from pybrowscap.loader.csv import URL
+ Downloader(URL).get(save_to_filepath)
 
 
 Tests
