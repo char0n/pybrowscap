@@ -21,6 +21,6 @@ setup(
     url='http://www.codescale.net/en/community#pybrowscap',
     license='BSD',
     keywords = "browser browscap detection user agent",
-    packages=['pybrowscap', 'pybrowscap.loader']
+    packages=['pybrowscap', 'pybrowscap.loader', 'pybrowscap.loader.csv']
 )
 
