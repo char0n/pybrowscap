@@ -15,7 +15,7 @@ setup(
     name='pybrowscap',
     version=pybrowscap.__version__,
     description='detects browsers capabilities and features like css, java, javascript etc.',
-    long_description=read('README'),
+    long_description=read('README.rst'),
     author='Vladimír Gorej',
     author_email='gorej@codescale.net',
     url='http://www.codescale.net/en/community#pybrowscap',
