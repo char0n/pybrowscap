@@ -1,5 +1,6 @@
 import unittest
-from pybrowscap.loader import load_file, Browscap
+from pybrowscap.loader.csv import load_file
+from pybrowscap.loader import Browscap
 import os
 
 class LoaderTest(unittest.TestCase):

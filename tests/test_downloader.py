@@ -4,17 +4,11 @@ import os
 
 class DownloaderTest(unittest.TestCase):
 
-    original_url = None
-
     def setUp(self):
-        self.original_url  = Downloader.url
-        Downloader.url     = 'http://www.codescale.net/en/'
-        self.downloader    = Downloader()
+        self.downloader    = Downloader('http://www.codescale.net/en/')
         self.new_file_path = os.path.dirname(__file__)+os.sep+'data'+os.sep+'tmp'+'browscap.csv'
 
     def tearDown(self):
-        Downloader.url    = self.original_url
-        self.original_url = None
         if os.path.exists(self.new_file_path):
             os.remove(self.new_file_path)
 

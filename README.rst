@@ -3,7 +3,7 @@ pybrowscap 1.0b1
 
 pybrowscap is a python port of PHP function `get_browser()`. It tells what the user
 browser is capable of. It detects browsers capabilities and features like css, java,
-javascript etc. It works on top of browscap data csv file.
+javascript etc. It works on top of browscap data file.
 
 
 Requirements
@@ -25,7 +25,7 @@ Example
 
 ::
 
- from pybrowscap.loader import load_file
+ from pybrowscap.loader.csv import load_file
  browscap = load_file(path_to_browscap_csv)
  browser  = browscap.search(user_agent_string)
  browser.is_crawler()

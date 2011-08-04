@@ -1,5 +1,5 @@
 import unittest
-from pybrowscap.loader import load_file
+from pybrowscap.loader.csv import load_file
 from decimal import Decimal
 import os
 
