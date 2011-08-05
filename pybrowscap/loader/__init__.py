@@ -21,7 +21,7 @@ class Downloader(object):
                 opener.add_handler(urllib2.ProxyHandler({'http': self.proxy}))
                 for handler in self.additional_handlers:
                     opener.add_handler(handler)
-            opener.add_headers = [('User-agent', 'pybrowscap downloader')]
+            opener.addheaders = [('User-agent', 'pybrowscap downloader')]
             urllib2.install_opener(opener)
             response = opener.open(self.url, timeout=self.timeout)
             contents = response.read()
