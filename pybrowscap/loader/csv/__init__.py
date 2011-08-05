@@ -49,7 +49,7 @@ def load_file(browscap_file_path):
                     defaults = line
                     continue
                 line = replace_defaults(line, defaults)
-                ua_regex = line['useragent']
+                ua_regex = line['useragent'][1:-1]
                 for unsafe_char in '^$()[].-':
                     ua_regex = ua_regex.replace(unsafe_char, '\%s' % unsafe_char)
                 ua_regex = ua_regex.replace('?', '.').replace('*', '.*?')

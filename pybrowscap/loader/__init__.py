@@ -51,9 +51,9 @@ class Browscap(object):
         self.regex_cache = regex_cache
 
     def search(self, user_agent_string):
-        user_agent_string = '[%s]' % user_agent_string
-
+        log.info('Searching for user-agent: %s', user_agent_string)
         if user_agent_string in self.cache:
+            log.debug('Cache-hit, searching skipped')
             return Browser(self.cache[user_agent_string])
 
         ua_regex_string = ''
@@ -61,7 +61,9 @@ class Browscap(object):
             if ua_pattern.match(user_agent_string) and len(ua_pattern.pattern) > len(ua_regex_string):
                 ua_regex_string = ua_pattern.pattern
         if ua_regex_string == '':
+            log.debug('No match found')
             return None
         else:
+            log.debug('Match found, returning Browser instance for: %s', ua_regex_string)
             self.cache[user_agent_string] = self.data[ua_regex_string]
             return Browser(self.data[ua_regex_string])
