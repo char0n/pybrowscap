@@ -1,5 +1,5 @@
-pybrowscap 1.0b1
-================
+pybrowscap
+==========
 
 pybrowscap is a python port of PHP function `get_browser()`. It tells what the user
 browser is capable of. It detects browsers capabilities and features like css, java,
@@ -46,8 +46,8 @@ Tests
 
 **Tested on evnironment**
 
-- Ubuntu Linux 10.04
-- python 2.6.6
+- Ubuntu Linux 11.04 natty
+- python 2.7.1+
 - python unitest
 - browscap.csv from Wed, 22 Jun 2011 23:26:51 -0000
 
