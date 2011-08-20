@@ -46,7 +46,7 @@ Tests
 
 **Tested on evnironment**
 
-- Ubuntu Linux 11.04 natty
+- Xubuntu Linux 11.04 natty 64-bit
 - python 2.7.1+
 - python unitest
 - browscap.csv from Wed, 22 Jun 2011 23:26:51 -0000
