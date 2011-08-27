@@ -55,7 +55,7 @@ Tests
 
 To run the test run command: ::
 
- python test.py
+ $ python test.py
 
 
 Author
