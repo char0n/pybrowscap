@@ -10,6 +10,12 @@ TYPE_CSV = 1
 
 
 class Downloader(object):
+    """
+    This class is responsible for downloading new versions of
+    browscap file. It is possible to to define a timeout for connection
+    and proxy server settings.
+    
+    """
 
     def __init__(self, url, timeout=20, proxy=None, additional_handlers=[]):
         self.url                 = url
@@ -18,6 +24,14 @@ class Downloader(object):
         self.additional_handlers = additional_handlers
 
     def get(self, save_to_filepath=None):
+        """
+        Getting browscap file contents and saving it to file or returning
+        it as a string.
+
+        Returns file contents if save_to_filepath is not None,
+        file contents as string otherwise.
+
+        """
         try:
             log.info('Downloading latest version of browscap from %s' % self.url)
             opener = urllib2.build_opener()
@@ -48,6 +62,11 @@ class Downloader(object):
 
 
 class Browscap(object):
+    """
+    Browscap class represents abstraction on top of browscap data file.
+    It contains all browscap data file data in python accessible form.
+
+    """
 
     cache = {}
 
@@ -62,6 +81,11 @@ class Browscap(object):
         self.reloaded_at = None
 
     def reload(self, browscap_file_path=None):
+        """
+        Reloads new data to this Browscap instance. This is useful
+        mainly in apps that run in long living threads, like django projects.
+
+        """
         from pybrowscap.loader.csv import load_file as load_csv_file
         try:
             file_to_load = browscap_file_path or self.browscap_file_path
@@ -79,6 +103,13 @@ class Browscap(object):
             raise
 
     def search(self, user_agent_string):
+        """
+        Searching browscap data file for longest user_agent_string that
+        matches the regex.
+
+        Returns Browser instance if match is found, None otherwise.
+
+        """
         log.info('Searching for user-agent: %s', user_agent_string)
         if user_agent_string in self.cache:
             log.debug('Cache-hit, searching skipped')

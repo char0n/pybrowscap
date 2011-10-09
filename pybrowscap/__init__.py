@@ -1,6 +1,10 @@
 __version__ = '1.0'
 
 class Browser(object):
+    """
+    Browser class represents one record in  browscap data file.
+    
+    """
 
     def __init__(self, user_agent):
         self.user_agent = user_agent

@@ -9,12 +9,24 @@ import locale
 
 log = logging.getLogger(__name__)
 
-
+# Url where latest version of csv browscap data file is located
 URL = 'http://browsers.garykeith.com/stream.asp?BrowsCapCSV'
 
 
 def load_file(browscap_file_path):
+    """
+    Loading browscap csv data file, parsing in into accessible python
+    form and returning a new Browscap class instance with all appropriate data.
+
+    If something went wrong, Exception is raised
+
+    """
     def replace_defaults(line, defaults):
+        """
+        Replaces 'default' values for a line with parent line value and
+        converting it into native python value.
+
+        """
         new_line = {}
         for feature, value in line.iteritems():
             if value == 'default':
