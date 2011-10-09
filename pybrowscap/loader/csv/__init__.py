@@ -2,7 +2,7 @@ from decimal import Decimal
 import logging
 import csv
 import re
-from pybrowscap.loader import Browscap
+from pybrowscap.loader import Browscap, TYPE_CSV
 
 log = logging.getLogger(__name__)
 
@@ -56,7 +56,9 @@ def load_file(browscap_file_path):
                 ua_regex = '^%s$' % ua_regex
                 browscap_data.update({ua_regex: line})
                 regex_cache.append(re.compile(ua_regex))
-        return Browscap(browscap_data, regex_cache)
+        return Browscap(
+            browscap_data, regex_cache, browscap_file_path,  TYPE_CSV
+        )
     except Exception:
         log.exception('Error while reading browscap source file')
         raise

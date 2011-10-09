@@ -1,8 +1,13 @@
 from pybrowscap import Browser
+from datetime import datetime
 import logging
 import urllib2
 
 log = logging.getLogger(__name__)
+
+
+TYPE_CSV = 1
+
 
 class Downloader(object):
 
@@ -46,9 +51,28 @@ class Browscap(object):
 
     cache = {}
 
-    def __init__(self, data_dict, regex_cache):
-        self.data        = data_dict
+    def __init__(self, data_dict, regex_cache, browscap_file_path, type):
+        self.data = data_dict
         self.regex_cache = regex_cache
+        self.browscap_file_path = browscap_file_path
+        self.type = type
+        self.loaded_at = datetime.now()
+        self.reloaded_at = None
+
+    def reload(self, browscap_file_path=None):
+        from pybrowscap.loader.csv import load_file as load_csv_file
+        try:
+            file_to_load = browscap_file_path or self.browscap_file_path
+            if self.type == TYPE_CSV:
+                reloaded_browscap = load_csv_file(file_to_load)
+            self.data = reloaded_browscap.data
+            self.regex_cache = reloaded_browscap.regex_cache
+            self.browscap_file_path = file_to_load
+            self.cache = {}
+            self.reloaded_at = datetime.now()
+        except Exception:
+            log.exception('Error while reloading Browscap instance')
+            raise
 
     def search(self, user_agent_string):
         log.info('Searching for user-agent: %s', user_agent_string)

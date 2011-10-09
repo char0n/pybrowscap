@@ -3,7 +3,7 @@ from pybrowscap.loader.csv import load_file
 from decimal import Decimal
 import os
 
-BROWSCAP = load_file(os.path.dirname(__file__)+os.sep+'data'+os.sep+'browscap.csv')
+BROWSCAP = load_file(os.path.dirname(__file__)+os.sep+'data'+os.sep+'browscap_22_06_2011.csv')
 
 class BrowserFirefoxTest(unittest.TestCase):
 
