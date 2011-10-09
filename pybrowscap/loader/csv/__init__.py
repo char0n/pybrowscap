@@ -1,12 +1,17 @@
 from decimal import Decimal
+from datetime import datetime
+from StringIO import StringIO
 import logging
 import csv
 import re
 from pybrowscap.loader import Browscap, TYPE_CSV
+import locale
 
 log = logging.getLogger(__name__)
 
+
 URL = 'http://browsers.garykeith.com/stream.asp?BrowsCapCSV'
+
 
 def load_file(browscap_file_path):
     def replace_defaults(line, defaults):
@@ -35,13 +40,25 @@ def load_file(browscap_file_path):
             log.info('Reading browscap source file')
             dialect = csv.Sniffer().sniff(csvfile.read(4096))
             csvfile.seek(0)
-            log.info('Removing fileinfo section')
+            log.info('Getting file version and release date')
             csvfile.readline()
-            csvfile.readline()
-            reader        = csv.DictReader(csvfile, dialect=dialect)
-            defaults      = {}
+            line = csv.reader(StringIO(csvfile.readline())).next()
+            try:
+                version = int(line[0])
+                old_locale = locale.getlocale()
+                locale.setlocale(locale.LC_TIME, locale.normalize('en_US.utf8'))
+                release_date = datetime.strptime(line[1][:-6], '%a, %d %b %Y %H:%M:%S')
+            except Exception:
+                log.exception('Error while getting file version and release date')
+                version = None
+                release_date = None
+            else:
+                locale.setlocale(locale.LC_TIME, old_locale)
+            log.info('Reading browscap user-agent data')
+            reader = csv.DictReader(csvfile, dialect=dialect)
+            defaults = {}
             browscap_data = {}
-            regex_cache   = []
+            regex_cache = []
             for line in reader:
                 if line['Parent'] == 'DefaultProperties':
                     continue
@@ -57,7 +74,8 @@ def load_file(browscap_file_path):
                 browscap_data.update({ua_regex: line})
                 regex_cache.append(re.compile(ua_regex))
         return Browscap(
-            browscap_data, regex_cache, browscap_file_path,  TYPE_CSV
+            browscap_data, regex_cache, browscap_file_path, TYPE_CSV,
+            version, release_date
         )
     except Exception:
         log.exception('Error while reading browscap source file')

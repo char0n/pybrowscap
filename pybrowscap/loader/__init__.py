@@ -51,11 +51,13 @@ class Browscap(object):
 
     cache = {}
 
-    def __init__(self, data_dict, regex_cache, browscap_file_path, type):
+    def __init__(self, data_dict, regex_cache, browscap_file_path, type, version, release_date):
         self.data = data_dict
         self.regex_cache = regex_cache
         self.browscap_file_path = browscap_file_path
         self.type = type
+        self.version = version
+        self.release_date = release_date
         self.loaded_at = datetime.now()
         self.reloaded_at = None
 
@@ -67,6 +69,8 @@ class Browscap(object):
                 reloaded_browscap = load_csv_file(file_to_load)
             self.data = reloaded_browscap.data
             self.regex_cache = reloaded_browscap.regex_cache
+            self.version = reloaded_browscap.version
+            self.release_date = reloaded_browscap.release_date
             self.browscap_file_path = file_to_load
             self.cache = {}
             self.reloaded_at = datetime.now()

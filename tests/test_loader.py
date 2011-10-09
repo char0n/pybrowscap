@@ -18,22 +18,33 @@ class LoaderTest(unittest.TestCase):
         self.assertTrue(browscap.reloaded_at is None)
         self.assertEqual(len(browscap.data), 3814)
         self.assertEqual(len(browscap.regex_cache), 3816)
+        self.assertEqual(browscap.version, 4856)
+        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
 
     def test_reload_original_csv_browscap_file(self):
         browscap = load_file(self.browscap_file1)
         self.assertEqual(len(browscap.data), 3814)
         self.assertEqual(len(browscap.regex_cache), 3816)
+        self.assertEqual(browscap.version, 4856)
+        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
         browscap.reload()
         self.assertEqual(len(browscap.data), 3814)
         self.assertEqual(len(browscap.regex_cache), 3816)
+        self.assertEqual(browscap.version, 4856)
+        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
 
     def test_reload_new_csv_browscap_file(self):
         browscap = load_file(self.browscap_file1)
         self.assertEqual(len(browscap.data), 3814)
         self.assertEqual(len(browscap.regex_cache), 3816)
+        self.assertEqual(browscap.version, 4856)
+        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
         browscap.reload(self.browscap_file2)
         self.assertEqual(len(browscap.data), 4078)
         self.assertEqual(len(browscap.regex_cache), 4239)
+        self.assertEqual(browscap.version, 4862)
+        self.assertEqual(browscap.release_date, datetime.strptime('Fri, 07 Oct 2011 06:46:46', '%a, %d %b %Y %H:%M:%S'))
+
 
     def test_load_browscap_no_file(self):
         self.assertRaises(Exception, load_file, ('www.codescale.net'))
