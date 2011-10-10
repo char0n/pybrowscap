@@ -64,8 +64,11 @@ def load_file(browscap_file_path):
                 log.exception('Error while getting file version and release date')
                 version = None
                 release_date = None
-            else:
-                locale.setlocale(locale.LC_TIME, old_locale)
+            finally:
+                try:
+                    locale.setlocale(locale.LC_TIME, old_locale)
+                except Exception:
+                    pass
             log.info('Reading browscap user-agent data')
             reader = csv.DictReader(csvfile, dialect=dialect)
             defaults = {}
