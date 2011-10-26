@@ -29,7 +29,7 @@ def load_file(browscap_file_path):
         """
         new_line = {}
         for feature, value in line.iteritems():
-            if value == 'default':
+            if value == 'default' or value == '':
                 value = defaults[feature]
             if value == 'true':
                 value = True
