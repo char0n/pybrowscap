@@ -29,7 +29,7 @@ def load_file(browscap_file_path):
         """
         new_line = {}
         for feature, value in line.iteritems():
-            if value == 'default':
+            if value == 'default' or value == '':
                 value = defaults[feature]
             if value == 'true':
                 value = True
@@ -81,11 +81,8 @@ def load_file(browscap_file_path):
                     defaults = line
                     continue
                 line = replace_defaults(line, defaults)
-                ua_regex = line['useragent'][1:-1]
-                for unsafe_char in '^$()[].-':
-                    ua_regex = ua_regex.replace(unsafe_char, '\%s' % unsafe_char)
-                ua_regex = ua_regex.replace('?', '.').replace('*', '.*?')
-                ua_regex = '^%s$' % ua_regex
+                ua_regex = '^%s$' % re.escape(line['useragent'][1:-1])
+                ua_regex = ua_regex.replace('\\?', '.').replace('\\*', '.*?')
                 browscap_data.update({ua_regex: line})
                 regex_cache.append(re.compile(ua_regex))
         return Browscap(

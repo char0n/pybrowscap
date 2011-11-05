@@ -22,10 +22,10 @@ class BrowserFirefoxTest(unittest.TestCase):
                                                 'beta': False, 'sortorder': '860', 'aolversion': Decimal('0.0'), 'alpha': False,
                                                 'frames': True, 'cssversion': Decimal('0.0'), 'crawler': False,
                                                 'masterparent': False, 'tables': True, 'iframes': True,
-                                                'minorversion': 0, 'internalid': '11277', 'mobiledevice': False,
-                                                'vbscript': False, 'win32': False, 'platform': 'Linux', 'version': Decimal('0.0'),
+                                                'minorversion': 6, 'internalid': '11277', 'mobiledevice': False,
+                                                'vbscript': False, 'win32': False, 'platform': 'Linux', 'version': Decimal('3.6'),
                                                 'useragent': '[Mozilla/5.0 (X11; *; *Linux*; *; rv:1.9.2*) Gecko/* Firefox/3.6*]',
-                                                'browser': '', 'win16': False, 'majorversion': 0})
+                                                'browser': 'Firefox', 'win16': False, 'majorversion': 3})
 
     def test_get(self):
         self.assertEqual(self.browser.get('platform'), 'Linux')
@@ -34,7 +34,7 @@ class BrowserFirefoxTest(unittest.TestCase):
         self.assertEqual(self.browser.get('codescale', ''), '')
 
     def test_name(self):
-        self.assertEqual(self.browser.name(), '')
+        self.assertEqual(self.browser.name(), 'Firefox')
 
     def test_category(self):
         self.assertEqual(self.browser.category(), 'Firefox 3.6')
@@ -48,15 +48,15 @@ class BrowserFirefoxTest(unittest.TestCase):
 
     def test_version(self):
         self.assertTrue(isinstance(self.browser.version(), Decimal))
-        self.assertEqual(self.browser.version(), Decimal('0.0'))
+        self.assertEqual(self.browser.version(), Decimal('3.6'))
 
     def test_version_major(self):
         self.assertTrue(isinstance(self.browser.version_major(), int))
-        self.assertEqual(self.browser.version_major(), 0)
+        self.assertEqual(self.browser.version_major(), 3)
 
     def test_version_minor(self):
         self.assertTrue(isinstance(self.browser.version_minor(), int))
-        self.assertEqual(self.browser.version_minor(), 0)
+        self.assertEqual(self.browser.version_minor(), 6)
 
     def test_css_version(self):
         self.assertTrue(isinstance(self.browser.css_version(), Decimal))
