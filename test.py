@@ -1,5 +1,7 @@
-from tests import test_browser, test_downloader, test_loader
 import unittest
+from pybrowscap.test.loader import test_downloader
+from pybrowscap.test.loader.csv import test_loader, test_browser
+
 
 if __name__ == "__main__":
     loader = unittest.TestLoader()
@@ -8,4 +10,3 @@ if __name__ == "__main__":
     suite.addTest(loader.loadTestsFromModule(test_downloader))
     suite.addTest(loader.loadTestsFromModule(test_loader))
     unittest.TextTestRunner(verbosity=2).run(suite)
-

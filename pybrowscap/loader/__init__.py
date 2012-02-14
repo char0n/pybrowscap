@@ -1,7 +1,9 @@
-from pybrowscap import Browser
-from datetime import datetime
 import logging
 import urllib2
+from datetime import datetime
+
+from pybrowscap import Browser
+
 
 log = logging.getLogger(__name__)
 
@@ -11,50 +13,75 @@ TYPE_CSV = 1
 
 class Downloader(object):
     """
-    This class is responsible for downloading new versions of
-    browscap file. It is possible to to define a timeout for connection
-    and proxy server settings.
-    
+    This class is responsible for downloading new versions of browscap file.
+    It is possible to to define a timeout for connection and proxy server settings.
+
     """
 
-    def __init__(self, url, timeout=20, proxy=None, additional_handlers=[]):
-        self.url                 = url
-        self.timeout             = timeout
-        self.proxy               = proxy
+    def __init__(self, url, timeout=20, proxy=None, additional_handlers=None):
+        """Constructor
+
+        Args:
+
+        :param url: URL of browscap file
+        :type url: string
+        :param timeout: connection timeout
+        :type timeout: int
+        :param proxy: url of proxy server
+        :type proxy: string
+        :param additional_handlers: list of additional urllib2 handlers
+        :type additional_handlers: list
+        :returns: Downloader instance
+        :rtype: Downloader
+
+        """
+        self.url = url
+        self.timeout = timeout
+        self.proxy = proxy
         self.additional_handlers = additional_handlers
 
-    def get(self, save_to_filepath=None):
+    def get(self, save_to_file_path=None):
         """
-        Getting browscap file contents and saving it to file or returning
-        it as a string.
+        Getting browscap file contents and saving it to file or returning it as a string.
+        Returns file contents if save_to_file_path is not None, file contents as string otherwise.
 
-        Returns file contents if save_to_filepath is not None,
-        file contents as string otherwise.
+        ;param save_to_file_path: path on filesystem where browscap file will be saved
+        :rtype save_to_file_path: string
+        :returns: None or browscap file contents
+        :rtype: string
+        :raises: ValueError, urllib2.URLError, urllib2.HTTPError
 
         """
         try:
-            log.info('Downloading latest version of browscap from %s' % self.url)
+            log.info('Downloading latest version of browscap file from %s', self.url)
             opener = urllib2.build_opener()
             if self.proxy is not None:
                 log.info('Setting up proxy server %s' % self.proxy)
                 opener.add_handler(urllib2.ProxyHandler({'http': self.proxy}))
-                for handler in self.additional_handlers:
-                    opener.add_handler(handler)
+                if self.additional_handlers is not None:
+                    for handler in self.additional_handlers:
+                        opener.add_handler(handler)
             opener.addheaders = [('User-agent', 'pybrowscap downloader')]
             urllib2.install_opener(opener)
             response = opener.open(self.url, timeout=self.timeout)
             contents = response.read()
             response.close()
-        except Exception:
-            log.exception('Error while downloading latest version of browscap')
+        except ValueError:
+            log.exception('Url to browscap file is probably invalid')
+            raise
+        except urllib2.URLError:
+            log.exception('Something went wrong while processing urllib2 handlers')
+            raise
+        except urllib2.HTTPError:
+            log.exception('Something went wrong while downloading browscap file')
             raise
 
-        if save_to_filepath is not None:
+        if save_to_file_path is not None:
             try:
-                log.info('Saving latest version of browscap file to %s' % save_to_filepath)
-                with open(save_to_filepath, 'wb') as file:
+                log.info('Saving latest version of browscap file to %s', save_to_file_path)
+                with open(save_to_file_path, 'wb') as file:
                     file.write(contents)
-            except Exception:
+            except IOError:
                 log.exception('Error while saving latest version of browscap file')
                 raise
         else:
@@ -71,6 +98,25 @@ class Browscap(object):
     cache = {}
 
     def __init__(self, data_dict, regex_cache, browscap_file_path, type, version, release_date):
+        """Constructor
+
+        :param data_dict: dictionary of regex:line pairs
+        :type data_dict: dict
+        :param regex_cache: list of compiled regex patterns
+        :type regex_cache: list
+        :param browscap_file_path: path to the browscap file
+        :type browscap_file_path: string
+        :param type: type of browscap file csv, ini...
+        :type type: int
+        :param version: browscap file version
+        :type version: int
+        :param release_date: release date of browscap file
+        :type release_date: datetime.datetime
+        :returns: Browscap instance
+        :rtype: Browscap
+
+        """
+
         self.data = data_dict
         self.regex_cache = regex_cache
         self.browscap_file_path = browscap_file_path

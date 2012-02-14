@@ -1,10 +1,25 @@
+
 __version__ = '1.1'
 
+import traceback
+from StringIO import StringIO
+
+
+class Error(Exception):
+    """Base pybrowscap Error."""
+
+    def __init__(self, value, e):
+        s = StringIO()
+        traceback.print_exc(file=s)
+        self.value = (value, s.getvalue())
+        s.close()
+
+    def __str__(self):
+        return repr(self.value)
+
+
 class Browser(object):
-    """
-    Browser class represents one record in  browscap data file.
-    
-    """
+    """Browser class represents one record in  browscap data file."""
 
     def __init__(self, user_agent):
         self.user_agent = user_agent

@@ -1,21 +1,23 @@
 import unittest
+import os
+from datetime import datetime
+
 from pybrowscap.loader.csv import load_file
 from pybrowscap.loader import Browscap, TYPE_CSV
-from datetime import datetime
-import os
+
 
 class LoaderTest(unittest.TestCase):
 
-    browscap_file1 = os.path.dirname(__file__)+os.sep+'data'+os.sep+'browscap_22_06_2011.csv'
-    browscap_file2 = os.path.dirname(__file__)+os.sep+'data'+os.sep+'browscap_07_10_2011.csv'
+    browscap_file1 = os.path.dirname(__file__) + os.sep + '..' + os.sep + '..' + os.sep + 'data' + os.sep + 'browscap_22_06_2011.csv'
+    browscap_file2 = os.path.dirname(__file__) + os.sep + '..' + os.sep + '..' + os.sep + 'data' + os.sep + 'browscap_07_10_2011.csv'
 
     def test_load_csv_browscap(self):
         browscap = load_file(self.browscap_file1)
-        self.assertTrue(isinstance(browscap, Browscap))
+        self.assertIsInstance(browscap, Browscap)
         self.assertEqual(browscap.browscap_file_path, self.browscap_file1)
         self.assertEqual(browscap.type, TYPE_CSV)
         self.assertGreaterEqual(datetime.now(), browscap.loaded_at)
-        self.assertTrue(browscap.reloaded_at is None)
+        self.assertIsNone(browscap.reloaded_at)
         self.assertEqual(len(browscap.data), 3814)
         self.assertEqual(len(browscap.regex_cache), 3816)
         self.assertEqual(browscap.version, 4856)
@@ -51,4 +53,3 @@ class LoaderTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-  

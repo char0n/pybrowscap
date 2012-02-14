@@ -1,13 +1,15 @@
-from decimal import Decimal
-from datetime import datetime
-from StringIO import StringIO
 import logging
+import locale
 import csv
 import re
+from StringIO import StringIO
+from datetime import datetime
+
 from pybrowscap.loader import Browscap, TYPE_CSV
-import locale
+
 
 log = logging.getLogger(__name__)
+
 
 # Url where latest version of csv browscap data file is located
 URL = 'http://browsers.garykeith.com/stream.asp?BrowsCapCSV'
@@ -42,9 +44,9 @@ def load_file(browscap_file_path):
                     value = 0
             if feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version':
                 try:
-                    value = Decimal(value)
+                    value = float(value)
                 except Exception:
-                    value = Decimal('0.0')
+                    value = float(0)
             new_line[feature.lower()] = value
         return new_line
     try:

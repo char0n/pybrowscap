@@ -1,11 +1,12 @@
 import unittest
-from pybrowscap.loader.csv import load_file
-from decimal import Decimal
 import os
 
-BROWSCAP = load_file(os.path.dirname(__file__)+os.sep+'data'+os.sep+'browscap_22_06_2011.csv')
+from pybrowscap.loader.csv import load_file
 
-class BrowserFirefoxTest(unittest.TestCase):
+
+BROWSCAP = load_file(os.path.dirname(__file__) + os.sep + '..' + os.sep + '..' + os.sep + 'data' + os.sep + 'browscap_22_06_2011.csv')
+
+class TestBrowserFirefox(unittest.TestCase):
 
     user_agent = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110628 Ubuntu/10.10 (maverick) Firefox/3.6.18'
 
@@ -16,21 +17,22 @@ class BrowserFirefoxTest(unittest.TestCase):
         self.browser = None
 
     def test_items(self):
-        self.assertEqual(self.browser.items(), {'cookies': True, 'javaapplets': True, 'parent': 'Firefox 3.6',
-                                                'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
-                                                'banned': False, 'javascript': True, 'syndicationreader': False,
-                                                'beta': False, 'sortorder': '860', 'aolversion': Decimal('0.0'), 'alpha': False,
-                                                'frames': True, 'cssversion': Decimal('0.0'), 'crawler': False,
-                                                'masterparent': False, 'tables': True, 'iframes': True,
-                                                'minorversion': 6, 'internalid': '11277', 'mobiledevice': False,
-                                                'vbscript': False, 'win32': False, 'platform': 'Linux', 'version': Decimal('3.6'),
-                                                'useragent': '[Mozilla/5.0 (X11; *; *Linux*; *; rv:1.9.2*) Gecko/* Firefox/3.6*]',
-                                                'browser': 'Firefox', 'win16': False, 'majorversion': 3})
+        self.assertDictEqual(self.browser.items(),
+                             {'cookies': True, 'javaapplets': True, 'parent': 'Firefox 3.6',
+                              'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
+                              'banned': False, 'javascript': True, 'syndicationreader': False,
+                              'beta': False, 'sortorder': '860', 'aolversion': 0.0, 'alpha': False,
+                              'frames': True, 'cssversion': 0.0, 'crawler': False,
+                              'masterparent': False, 'tables': True, 'iframes': True,
+                              'minorversion': 6, 'internalid': '11277', 'mobiledevice': False,
+                              'vbscript': False, 'win32': False, 'platform': 'Linux', 'version': 3.6,
+                              'useragent': '[Mozilla/5.0 (X11; *; *Linux*; *; rv:1.9.2*) Gecko/* Firefox/3.6*]',
+                              'browser': 'Firefox', 'win16': False, 'majorversion': 3})
 
     def test_get(self):
         self.assertEqual(self.browser.get('platform'), 'Linux')
         self.assertEqual(self.browser.get('parent'), 'Firefox 3.6')
-        self.assertEqual(self.browser.get('codescale'), None)
+        self.assertIsNone(self.browser.get('codescale'))
         self.assertEqual(self.browser.get('codescale', ''), '')
 
     def test_name(self):
@@ -43,24 +45,24 @@ class BrowserFirefoxTest(unittest.TestCase):
         self.assertEqual(self.browser.platform(), 'Linux')
 
     def test_aol_version(self):
-        self.assertTrue(isinstance(self.browser.aol_version(), Decimal))
-        self.assertEqual(self.browser.aol_version(), Decimal('0.0'))
+        self.assertIsInstance(self.browser.aol_version(), float)
+        self.assertEqual(self.browser.aol_version(), 0.0)
 
     def test_version(self):
-        self.assertTrue(isinstance(self.browser.version(), Decimal))
-        self.assertEqual(self.browser.version(), Decimal('3.6'))
+        self.assertIsInstance(self.browser.version(), float)
+        self.assertEqual(self.browser.version(), 3.6)
 
     def test_version_major(self):
-        self.assertTrue(isinstance(self.browser.version_major(), int))
+        self.assertIsInstance(self.browser.version_major(), int)
         self.assertEqual(self.browser.version_major(), 3)
 
     def test_version_minor(self):
-        self.assertTrue(isinstance(self.browser.version_minor(), int))
+        self.assertIsInstance(self.browser.version_minor(), int)
         self.assertEqual(self.browser.version_minor(), 6)
 
     def test_css_version(self):
-        self.assertTrue(isinstance(self.browser.css_version(), Decimal))
-        self.assertEqual(self.browser.css_version(), Decimal('0.0'))
+        self.assertIsInstance(self.browser.css_version(), float)
+        self.assertEqual(self.browser.css_version(), 0.0)
 
     def test_supports(self):
         self.assertTrue(self.browser.supports('tables'))
@@ -111,7 +113,7 @@ class BrowserFirefoxTest(unittest.TestCase):
         self.assertFalse(self.browser.is_beta())
 
     def test_features(self):
-        self.assertEqual(self.browser.features(), ['tables', 'frames', 'iframes', 'javascript', 'cookies', 'java'])
+        self.assertListEqual(self.browser.features(), ['tables', 'frames', 'iframes', 'javascript', 'cookies', 'java'])
 
 
 
@@ -126,21 +128,22 @@ class BrowserGooglebotTest(unittest.TestCase):
         self.browser = None
 
     def test_items(self):
-        self.assertEqual(self.browser.items(), {'cookies': False, 'javaapplets': False, 'parent': 'Google',
-                                                'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
-                                                'banned': False, 'javascript': False, 'syndicationreader': False,
-                                                'beta': False, 'sortorder': '100', 'aolversion': Decimal('0.0'), 'alpha': False,
-                                                'frames': True, 'cssversion': Decimal('0.0'), 'crawler': True, 'masterparent': False,
-                                                'tables': True, 'iframes': True, 'minorversion': 1,
-                                                'internalid': '4128', 'mobiledevice': False, 'vbscript': False,
-                                                'win32': False, 'platform': '', 'version': Decimal('2.1'),
-                                                'useragent': '[*Googlebot/2.1*]', 'browser': 'Googlebot',
-                                                'win16': False, 'majorversion': 2})
+        self.assertDictEqual(self.browser.items(),
+                             {'cookies': False, 'javaapplets': False, 'parent': 'Google',
+                              'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
+                              'banned': False, 'javascript': False, 'syndicationreader': False,
+                              'beta': False, 'sortorder': '100', 'aolversion': 0.0, 'alpha': False,
+                              'frames': True, 'cssversion': 0.0, 'crawler': True, 'masterparent': False,
+                              'tables': True, 'iframes': True, 'minorversion': 1,
+                              'internalid': '4128', 'mobiledevice': False, 'vbscript': False,
+                              'win32': False, 'platform': '', 'version': 2.1,
+                              'useragent': '[*Googlebot/2.1*]', 'browser': 'Googlebot',
+                              'win16': False, 'majorversion': 2})
 
     def test_get(self):
         self.assertEqual(self.browser.get('platform'), '')
         self.assertEqual(self.browser.get('parent'), 'Google')
-        self.assertEqual(self.browser.get('codescale'), None)
+        self.assertIsNone(self.browser.get('codescale'))
         self.assertEqual(self.browser.get('codescale', ''), '')
 
     def test_name(self):
@@ -153,24 +156,24 @@ class BrowserGooglebotTest(unittest.TestCase):
         self.assertEqual(self.browser.platform(), '')
 
     def test_aol_version(self):
-        self.assertTrue(isinstance(self.browser.aol_version(), Decimal))
+        self.assertIsInstance(self.browser.aol_version(), float)
         self.assertEqual(self.browser.aol_version(), 0)
 
     def test_version(self):
-        self.assertTrue(isinstance(self.browser.version(), Decimal))
-        self.assertEqual(self.browser.version(), Decimal('2.1'))
+        self.assertIsInstance(self.browser.version(), float)
+        self.assertEqual(self.browser.version(), 2.1)
 
     def test_version_major(self):
-        self.assertTrue(isinstance(self.browser.version_major(), int))
+        self.assertIsInstance(self.browser.version_major(), int)
         self.assertEqual(self.browser.version_major(), 2)
 
     def test_version_minor(self):
-        self.assertTrue(isinstance(self.browser.version_minor(), int))
+        self.assertIsInstance(self.browser.version_minor(), int)
         self.assertEqual(self.browser.version_minor(), 1)
 
     def test_css_version(self):
-        self.assertTrue(isinstance(self.browser.css_version(), Decimal))
-        self.assertEqual(self.browser.css_version(), 0)
+        self.assertIsInstance(self.browser.css_version(), float)
+        self.assertEqual(self.browser.css_version(), 0.0)
 
     def test_supports(self):
         self.assertTrue(self.browser.supports('tables'))
