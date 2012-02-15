@@ -46,16 +46,18 @@ Tests
 
 **Tested on evnironment**
 
-- Xubuntu Linux 11.04 natty 64-bit
-- python 2.7.1+
+- Xubuntu Linux 11.10 oneiric 64-bit
+- python 2.7.2+
 - python unitest
-- browscap.csv from Wed, 22 Jun 2011 23:26:51 -0000
+- browscap_22_06_2011.csv from Wed, 22 Jun 2011 23:26:51 -0000
+- browscap.07_10_2011.csv from Fri, 07 Oct 2011 06:46:46 -0000
 
 **Running tests**
 
 To run the test run command: ::
 
  $ python test.py
+ $ python setup.py test
 
 
 Author

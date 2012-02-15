@@ -23,4 +23,3 @@ setup(
     keywords = 'browser browscap detection user agent',
     packages=['pybrowscap', 'pybrowscap.loader', 'pybrowscap.loader.csv']
 )
-

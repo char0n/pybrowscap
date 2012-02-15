@@ -1,4 +1,5 @@
 import unittest
+
 from pybrowscap.test.loader import test_downloader
 from pybrowscap.test.loader.csv import test_loader, test_browser
 
