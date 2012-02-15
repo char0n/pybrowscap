@@ -2,3 +2,4 @@
 *.swp
 *.pyc
 /pybrowscap.egg-info
+/dist
