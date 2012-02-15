@@ -1,3 +1,4 @@
+import sre_constants
 import logging
 import locale
 import csv
@@ -20,13 +21,22 @@ def load_file(browscap_file_path):
     Loading browscap csv data file, parsing in into accessible python
     form and returning a new Browscap class instance with all appropriate data.
 
-    If something went wrong, Exception is raised
+    :param browscap_file_path: location of browcap file on filesystem
+    :type browscap_file_path: string
+    :returns: Browscap instance filled with data
+    :rtype: pybrowscap.loader.Browscap
 
     """
     def replace_defaults(line, defaults):
-        """
-        Replaces 'default' values for a line with parent line value and
-        converting it into native python value.
+        """Replaces 'default' values for a line with parent line value and converting it into native python value.
+
+        :param line: original line from browscap file
+        :type line: dict
+        :param defaults: default values for current line
+        :type defaults: dict
+        :returns: dictionary with replaced default values
+        :rtype: dict
+        :raises: IOError
 
         """
         new_line = {}
@@ -51,26 +61,29 @@ def load_file(browscap_file_path):
         return new_line
     try:
         with open(browscap_file_path, 'rb') as csvfile:
-            log.info('Reading browscap source file')
+            log.info('Reading browscap source file %s', browscap_file_path)
             dialect = csv.Sniffer().sniff(csvfile.read(4096))
             csvfile.seek(0)
             log.info('Getting file version and release date')
             csvfile.readline()
             line = csv.reader(StringIO(csvfile.readline())).next()
+            log.info('Getting browcap file version')
             try:
                 version = int(line[0])
+            except ValueError:
+                log.exception('Error while getting browscap file version')
+                version = None
+            log.info('Getting browscap file release date')
+            try:
                 old_locale = locale.getlocale()
                 locale.setlocale(locale.LC_TIME, locale.normalize('en_US.utf8'))
                 release_date = datetime.strptime(line[1][:-6], '%a, %d %b %Y %H:%M:%S')
-            except Exception:
-                log.exception('Error while getting file version and release date')
-                version = None
+            except (ValueError, locale.Error):
+                log.exception('Error while getting browscap file release date')
                 release_date = None
             finally:
-                try:
-                    locale.setlocale(locale.LC_TIME, old_locale)
-                except Exception:
-                    pass
+                locale.setlocale(locale.LC_TIME, old_locale)
+
             log.info('Reading browscap user-agent data')
             reader = csv.DictReader(csvfile, dialect=dialect)
             defaults = {}
@@ -79,18 +92,20 @@ def load_file(browscap_file_path):
             for line in reader:
                 if line['Parent'] == 'DefaultProperties':
                     continue
-                if '[%s]' % line['Parent'] == line['UserAgent']:
+                if '[{0}]'.format(line['Parent']) == line['UserAgent']:
                     defaults = line
                     continue
                 line = replace_defaults(line, defaults)
-                ua_regex = '^%s$' % re.escape(line['useragent'][1:-1])
-                ua_regex = ua_regex.replace('\\?', '.').replace('\\*', '.*?')
-                browscap_data.update({ua_regex: line})
-                regex_cache.append(re.compile(ua_regex))
-        return Browscap(
-            browscap_data, regex_cache, browscap_file_path, TYPE_CSV,
-            version, release_date
-        )
-    except Exception:
-        log.exception('Error while reading browscap source file')
+                try:
+                    ua_regex = '^{0}$'.format(re.escape(line['useragent'][1:-1]))
+                    ua_regex = ua_regex.replace('\\?', '.').replace('\\*', '.*?')
+                    browscap_data[ua_regex] = line
+                    log.debug('Compiling user agent regex: %s', ua_regex)
+                    regex_cache.append(re.compile(ua_regex))
+                except sre_constants.error:
+                    continue
+        return Browscap(browscap_data, regex_cache, browscap_file_path, TYPE_CSV,
+                        version, release_date)
+    except IOError:
+        log.exception('Error while reading browscap source file %s', browscap_file_path)
         raise

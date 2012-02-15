@@ -3,6 +3,7 @@ import urllib2
 from datetime import datetime
 
 from pybrowscap import Browser
+load_csv_file = None
 
 
 log = logging.getLogger(__name__)
@@ -113,7 +114,7 @@ class Browscap(object):
         :param release_date: release date of browscap file
         :type release_date: datetime.datetime
         :returns: Browscap instance
-        :rtype: Browscap
+        :rtype: pybrowscap.loader.Browscap
 
         """
 
@@ -131,10 +132,18 @@ class Browscap(object):
         Reloads new data to this Browscap instance. This is useful
         mainly in apps that run in long living threads, like django projects.
 
+        :param browscap_file_path: location of new browcap file on filesystem, or use old
+        :type browscap_file_path: string or None
+        :returns: None
+        :raises: IOError
+
         """
-        from pybrowscap.loader.csv import load_file as load_csv_file
+        global load_csv_file
+        if load_csv_file is None:
+            from pybrowscap.loader.csv import load_file as load_csv_file
         try:
             file_to_load = browscap_file_path or self.browscap_file_path
+            log.info('Reloading browscap instance with file %s', file_to_load)
             if self.type == TYPE_CSV:
                 reloaded_browscap = load_csv_file(file_to_load)
             self.data = reloaded_browscap.data
@@ -144,16 +153,17 @@ class Browscap(object):
             self.browscap_file_path = file_to_load
             self.cache = {}
             self.reloaded_at = datetime.now()
-        except Exception:
-            log.exception('Error while reloading Browscap instance')
+        except IOError:
+            log.exception('Error while reloading Browscap instance with file %s', file_to_load)
             raise
 
     def search(self, user_agent_string):
-        """
-        Searching browscap data file for longest user_agent_string that
-        matches the regex.
+        """Searching browscap data file for longest user_agent_string that matches the regex.
 
-        Returns Browser instance if match is found, None otherwise.
+        :param user_agent_string: user agent to search in browscap file
+        :type user_agent_string: string
+        :returns: Browser instance or None
+        :rtype: pybrowscap.Browser or None
 
         """
         log.info('Searching for user-agent: %s', user_agent_string)
@@ -166,9 +176,9 @@ class Browscap(object):
             if ua_pattern.match(user_agent_string) and len(ua_pattern.pattern) > len(ua_regex_string):
                 ua_regex_string = ua_pattern.pattern
         if ua_regex_string == '':
-            log.debug('No match found')
+            log.info('No match found')
             return None
         else:
-            log.debug('Match found, returning Browser instance for: %s', ua_regex_string)
+            log.info('Match found, returning Browser instance for: %s', ua_regex_string)
             self.cache[user_agent_string] = self.data[ua_regex_string]
             return Browser(self.data[ua_regex_string])
