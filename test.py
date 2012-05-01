@@ -1,7 +1,13 @@
 import unittest
+import logging
 
 from pybrowscap.test.loader import test_downloader
 from pybrowscap.test.loader.csv import test_loader, test_browser
+
+
+log = logging.getLogger()
+log.addHandler(logging.StreamHandler())
+log.setLevel(logging.DEBUG)
 
 
 if __name__ == "__main__":

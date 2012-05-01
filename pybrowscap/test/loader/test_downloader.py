@@ -10,7 +10,7 @@ class DownloaderTest(unittest.TestCase):
     def setUp(self):
         self.url = 'http://www.codescale.net/en/'
         self.downloader = Downloader(self.url)
-        self.new_file_path = os.path.dirname(__file__) + os.sep + '..' + os.sep + 'data' + os.sep + 'tmp'+'browscap_22_06_2011.csv'
+        self.new_file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'tmp'+'browscap_22_06_2011.csv')
 
     def tearDown(self):
         if os.path.exists(self.new_file_path):

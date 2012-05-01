@@ -46,8 +46,8 @@ Tests
 
 **Tested on evnironment**
 
-- Xubuntu Linux 11.10 oneiric 64-bit
-- python 2.7.2+
+- Xubuntu Linux 12.04 LTS precise 64-bit
+- python 2.7.3
 - python unitest
 - browscap_22_06_2011.csv from Wed, 22 Jun 2011 23:26:51 -0000
 - browscap.07_10_2011.csv from Fri, 07 Oct 2011 06:46:46 -0000

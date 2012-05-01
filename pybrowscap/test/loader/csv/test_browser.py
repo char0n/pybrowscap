@@ -4,7 +4,8 @@ import os
 from pybrowscap.loader.csv import load_file
 
 
-BROWSCAP = load_file(os.path.dirname(__file__) + os.sep + '..' + os.sep + '..' + os.sep + 'data' + os.sep + 'browscap_22_06_2011.csv')
+BROWSCAP = load_file(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_22_06_2011.csv'))
+
 
 class TestBrowserFirefox(unittest.TestCase):
 

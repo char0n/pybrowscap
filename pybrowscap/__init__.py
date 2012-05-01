@@ -1,8 +1,11 @@
 
-__version__ = '1.1.2'
+__version__ = '1.1.3'
 
 import traceback
-from StringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 
 class Error(Exception):

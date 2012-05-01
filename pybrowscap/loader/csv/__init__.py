@@ -3,8 +3,11 @@ import logging
 import locale
 import csv
 import re
-from StringIO import StringIO
 from datetime import datetime
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from pybrowscap.loader import Browscap, TYPE_CSV
 

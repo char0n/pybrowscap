@@ -47,7 +47,7 @@ class Downloader(object):
         Returns file contents if save_to_file_path is not None, file contents as string otherwise.
 
         ;param save_to_file_path: path on filesystem where browscap file will be saved
-        :rtype save_to_file_path: string
+        :type save_to_file_path: string
         :returns: None or browscap file contents
         :rtype: string
         :raises: ValueError, urllib2.URLError, urllib2.HTTPError
