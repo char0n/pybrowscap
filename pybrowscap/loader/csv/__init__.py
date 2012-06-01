@@ -50,15 +50,20 @@ def load_file(browscap_file_path):
                 value = True
             if value == 'false':
                 value = False
-            if feature == 'MajorVersion' or feature == 'MinorVersion':
+            if feature == 'MinorVer' and value == '0':
+                value = defaults[feature]
+            if feature == 'MajorVer' or feature == 'MinorVer':
                 try:
                     value = int(value)
-                except Exception:
+                except (ValueError, OverflowError):
                     value = 0
-            if feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version':
+            if (feature == 'Version' or feature == 'RenderingEngine_Version') and value == '0':
+                value = defaults[feature]
+            if (feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version' or
+                feature == 'RenderingEngine_Version' or feature == 'Platform_Version'):
                 try:
                     value = float(value)
-                except Exception:
+                except (ValueError, OverflowError):
                     value = float(0)
             new_line[feature.lower()] = value
         return new_line
@@ -95,12 +100,12 @@ def load_file(browscap_file_path):
             for line in reader:
                 if line['Parent'] == 'DefaultProperties':
                     continue
-                if '[{0}]'.format(line['Parent']) == line['UserAgent']:
+                if line['Parent'] == line['PropertyName']:
                     defaults = line
                     continue
                 line = replace_defaults(line, defaults)
                 try:
-                    ua_regex = '^{0}$'.format(re.escape(line['useragent'][1:-1]))
+                    ua_regex = '^{0}$'.format(re.escape(line['propertyname']))
                     ua_regex = ua_regex.replace('\\?', '.').replace('\\*', '.*?')
                     browscap_data[ua_regex] = line
                     log.debug('Compiling user agent regex: %s', ua_regex)

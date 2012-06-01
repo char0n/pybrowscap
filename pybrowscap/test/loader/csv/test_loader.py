@@ -8,8 +8,8 @@ from pybrowscap.loader import Browscap, TYPE_CSV
 
 class LoaderTest(unittest.TestCase):
 
-    browscap_file1 = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_22_06_2011.csv')
-    browscap_file2 = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_07_10_2011.csv')
+    browscap_file1 = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_14_05_2012.csv')
+    browscap_file2 = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_21_05_2012.csv')
 
     def test_load_csv_browscap(self):
         browscap = load_file(self.browscap_file1)
@@ -20,32 +20,32 @@ class LoaderTest(unittest.TestCase):
         self.assertIsNone(browscap.reloaded_at)
         self.assertEqual(len(browscap.data), 2)
         self.assertEqual(len(browscap.regex_cache), 2)
-        self.assertEqual(browscap.version, 4856)
-        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
+        self.assertEqual(browscap.version, 5003)
+        self.assertEqual(browscap.release_date, datetime.strptime('Mon, 14 May 2012 22:20:20', '%a, %d %b %Y %H:%M:%S'))
 
     def test_reload_original_csv_browscap_file(self):
         browscap = load_file(self.browscap_file1)
         self.assertEqual(len(browscap.data), 2)
         self.assertEqual(len(browscap.regex_cache), 2)
-        self.assertEqual(browscap.version, 4856)
-        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
+        self.assertEqual(browscap.version, 5003)
+        self.assertEqual(browscap.release_date, datetime.strptime('Mon, 14 May 2012 22:20:20', '%a, %d %b %Y %H:%M:%S'))
         browscap.reload()
         self.assertEqual(len(browscap.data), 2)
         self.assertEqual(len(browscap.regex_cache), 2)
-        self.assertEqual(browscap.version, 4856)
-        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
+        self.assertEqual(browscap.version, 5003)
+        self.assertEqual(browscap.release_date, datetime.strptime('Mon, 14 May 2012 22:20:20', '%a, %d %b %Y %H:%M:%S'))
 
     def test_reload_new_csv_browscap_file(self):
         browscap = load_file(self.browscap_file1)
         self.assertEqual(len(browscap.data), 2)
         self.assertEqual(len(browscap.regex_cache), 2)
-        self.assertEqual(browscap.version, 4856)
-        self.assertEqual(browscap.release_date, datetime.strptime('Wed, 22 Jun 2011 23:26:51', '%a, %d %b %Y %H:%M:%S'))
+        self.assertEqual(browscap.version, 5003)
+        self.assertEqual(browscap.release_date, datetime.strptime('Mon, 14 May 2012 22:20:20', '%a, %d %b %Y %H:%M:%S'))
         browscap.reload(self.browscap_file2)
         self.assertEqual(len(browscap.data), 2)
         self.assertEqual(len(browscap.regex_cache), 2)
-        self.assertEqual(browscap.version, 4862)
-        self.assertEqual(browscap.release_date, datetime.strptime('Fri, 07 Oct 2011 06:46:46', '%a, %d %b %Y %H:%M:%S'))
+        self.assertEqual(browscap.version, 5003)
+        self.assertEqual(browscap.release_date, datetime.strptime('Mon, 21 May 2012 15:48:39', '%a, %d %b %Y %H:%M:%S'))
 
 
     def test_load_browscap_no_file(self):

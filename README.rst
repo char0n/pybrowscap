@@ -6,6 +6,13 @@ browser is capable of. It detects browsers capabilities and features like css, j
 javascript etc. It works on top of browscap data file.
 
 
+Important notice
+----------------
+
+Version 2.0 and higher of pybrowscap supports csv browscap file version 5000 and higher. If you want to use
+older version of csv browscap file, use pybrowscap version lower than 2.0.
+
+
 Requirements
 ------------
 
@@ -16,7 +23,7 @@ Requirements
 Instalation
 -----------
 
-Install via pipy or copy this module into your project or into your PYTHON_PATH.
+Install via pypi or copy this module into your project or into your PYTHON_PATH.
 Download latest version of browscap.csv file from http://browsers.garykeith.com/downloads.asp.
 
 
@@ -49,8 +56,8 @@ Tests
 - Xubuntu Linux 12.04 LTS precise 64-bit
 - python 2.7.3
 - python unitest
-- browscap_22_06_2011.csv from Wed, 22 Jun 2011 23:26:51 -0000
-- browscap.07_10_2011.csv from Fri, 07 Oct 2011 06:46:46 -0000
+- browscap_14_05_2012.csv from Mon, 14 May 2012 22:20:20 -0000
+- browscap.21_05_2012.csv from Mon, 21 May 2012 15:48:39 -0000"
 
 **Running tests**
 

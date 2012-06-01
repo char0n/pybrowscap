@@ -4,7 +4,7 @@ import os
 from pybrowscap.loader.csv import load_file
 
 
-BROWSCAP = load_file(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_22_06_2011.csv'))
+BROWSCAP = load_file(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'browscap_14_05_2012.csv'))
 
 
 class TestBrowserFirefox(unittest.TestCase):
@@ -18,17 +18,20 @@ class TestBrowserFirefox(unittest.TestCase):
         self.browser = None
 
     def test_items(self):
+
         self.assertDictEqual(self.browser.items(),
-                             {'cookies': True, 'javaapplets': True, 'parent': 'Firefox 3.6',
-                              'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
-                              'banned': False, 'javascript': True, 'syndicationreader': False,
-                              'beta': False, 'sortorder': '860', 'aolversion': 0.0, 'alpha': False,
-                              'frames': True, 'cssversion': 0.0, 'crawler': False,
-                              'masterparent': False, 'tables': True, 'iframes': True,
-                              'minorversion': 6, 'internalid': '11277', 'mobiledevice': False,
-                              'vbscript': False, 'win32': False, 'platform': 'Linux', 'version': 3.6,
-                              'useragent': '[Mozilla/5.0 (X11; *; *Linux*; *; rv:1.9.2*) Gecko/* Firefox/3.6*]',
-                              'browser': 'Firefox', 'win16': False, 'majorversion': 3})
+                             {'cookies': True, 'activexcontrols': False, 'aolversion': 0.0, 'frames': True,
+                              'cssversion': 0.0, 'majorver': 3, 'tables': True, 'iframes': True, 'vbscript': False,
+                              'comments': 'Firefox 3.6', 'platform_version': 0.0, 'platform': 'Linux', 'version': 3.6,
+                              'masterparent': False, 'renderingengine_version': 0.0, 'javaapplets': True,
+                              'parent': 'Firefox 3.6', 'backgroundsounds': False, 'win64': False,
+                              'propertyname': 'Mozilla/5.0 (X11; *; *Linux*; *; rv:1.9.2*) Gecko/* Firefox/3.6*',
+                              'javascript': True, 'beta': False, 'alpha': False,
+                              'renderingengine_description': 'For Firefox, Camino, K-Meleon, SeaMonkey, Netscape, and other Gecko-based browsers.',
+                              'crawler': False, 'renderingengine_name': 'Gecko', 'device_maker': '',
+                              'platform_description': '', 'minorver': 6, 'issyndicationreader': False,
+                              'device_name': '', 'win32': False, 'ismobiledevice': False, 'litemode': True,
+                              'agentid': '11277', 'win16': False, 'browser': 'Firefox'})
 
     def test_get(self):
         self.assertEqual(self.browser.get('platform'), 'Linux')
@@ -64,6 +67,29 @@ class TestBrowserFirefox(unittest.TestCase):
     def test_css_version(self):
         self.assertIsInstance(self.browser.css_version(), float)
         self.assertEqual(self.browser.css_version(), 0.0)
+
+    def test_rendering_engine_name(self):
+        self.assertEqual(self.browser.rendering_engine_name(), 'Gecko')
+
+    def test_rendering_engine_version(self):
+        self.assertIsInstance(self.browser.rendering_engine_version(), float)
+        self.assertEqual(self.browser.rendering_engine_version(), 0.0)
+
+    def test_device_maker(self):
+        self.assertEqual(self.browser.device_maker(), '')
+
+    def test_device_name(self):
+        self.assertEqual(self.browser.device_name(), '')
+
+    def test_platform_description(self):
+        self.assertEqual(self.browser.platform_description(), '')
+
+    def test_platform_version(self):
+        self.assertIsInstance(self.browser.platform_version(), float)
+        self.assertEqual(self.browser.platform_version(), 0.0)
+
+    def test_litemode(self):
+        self.assertTrue(self.browser.litemode())
 
     def test_supports(self):
         self.assertTrue(self.browser.supports('tables'))
@@ -105,7 +131,7 @@ class TestBrowserFirefox(unittest.TestCase):
         self.assertFalse(self.browser.is_syndication_reader())
 
     def test_is_banned(self):
-        self.assertFalse(self.browser.is_banned())
+        self.assertIsNone(self.browser.is_banned())
 
     def test_is_alpha(self):
         self.assertFalse(self.browser.is_alpha())
@@ -130,16 +156,17 @@ class BrowserGooglebotTest(unittest.TestCase):
 
     def test_items(self):
         self.assertDictEqual(self.browser.items(),
-                             {'cookies': False, 'javaapplets': False, 'parent': 'Google',
-                              'activexcontrols': False, 'backgroundsounds': False, 'win64': False,
-                              'banned': False, 'javascript': False, 'syndicationreader': False,
-                              'beta': False, 'sortorder': '100', 'aolversion': 0.0, 'alpha': False,
-                              'frames': True, 'cssversion': 0.0, 'crawler': True, 'masterparent': False,
-                              'tables': True, 'iframes': True, 'minorversion': 1,
-                              'internalid': '4128', 'mobiledevice': False, 'vbscript': False,
-                              'win32': False, 'platform': '', 'version': 2.1,
-                              'useragent': '[*Googlebot/2.1*]', 'browser': 'Googlebot',
-                              'win16': False, 'majorversion': 2})
+                             {'cookies': False, 'activexcontrols': False, 'aolversion': 0.0, 'frames': True,
+                              'cssversion': 0.0, 'majorver': 2, 'tables': True, 'iframes': True, 'vbscript': False,
+                              'comments': 'Google', 'platform_version': 0.0, 'platform': '', 'version': 2.1,
+                              'masterparent': False, 'renderingengine_version': 0.0, 'javaapplets': False,
+                              'parent': 'Google', 'backgroundsounds': False, 'win64': False,
+                              'propertyname': '*Googlebot/2.1*', 'javascript': False, 'beta': False,
+                              'alpha': False, 'renderingengine_description': '', 'crawler': True,
+                              'renderingengine_name': '', 'device_maker': '', 'platform_description': '',
+                              'minorver': 1, 'issyndicationreader': False, 'device_name': '', 'win32': False,
+                              'ismobiledevice': False, 'litemode': True, 'agentid': '4128', 'win16': False,
+                              'browser': 'Googlebot'})
 
     def test_get(self):
         self.assertEqual(self.browser.get('platform'), '')
@@ -175,6 +202,29 @@ class BrowserGooglebotTest(unittest.TestCase):
     def test_css_version(self):
         self.assertIsInstance(self.browser.css_version(), float)
         self.assertEqual(self.browser.css_version(), 0.0)
+
+    def test_rendering_engine_name(self):
+        self.assertEqual(self.browser.rendering_engine_name(), '')
+
+    def test_rendering_engine_version(self):
+        self.assertIsInstance(self.browser.rendering_engine_version(), float)
+        self.assertEqual(self.browser.rendering_engine_version(), 0.0)
+
+    def test_device_maker(self):
+        self.assertEqual(self.browser.device_maker(), '')
+
+    def test_device_name(self):
+        self.assertEqual(self.browser.device_name(), '')
+
+    def test_platform_description(self):
+        self.assertEqual(self.browser.platform_description(), '')
+
+    def test_platform_version(self):
+        self.assertIsInstance(self.browser.platform_version(), float)
+        self.assertEqual(self.browser.platform_version(), 0.0)
+
+    def test_litemode(self):
+        self.assertTrue(self.browser.litemode())
 
     def test_supports(self):
         self.assertTrue(self.browser.supports('tables'))
@@ -216,7 +266,7 @@ class BrowserGooglebotTest(unittest.TestCase):
         self.assertFalse(self.browser.is_syndication_reader())
 
     def test_is_banned(self):
-        self.assertFalse(self.browser.is_banned())
+        self.assertIsNone(self.browser.is_banned())
 
     def test_is_alpha(self):
         self.assertFalse(self.browser.is_alpha())

@@ -1,7 +1,8 @@
 
-__version__ = '1.1.3'
+__version__ = '2.0'
 
 import traceback
+import warnings
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -49,13 +50,34 @@ class Browser(object):
         return self.get('version')
 
     def version_major(self):
-        return self.get('majorversion', 0)
+        return self.get('majorver', 0)
 
     def version_minor(self):
-        return self.get('minorversion', 0)
+        return self.get('minorver', 0)
 
     def css_version(self):
         return self.get('cssversion', 0)
+
+    def rendering_engine_name(self):
+        return self.get('renderingengine_name')
+
+    def rendering_engine_version(self):
+        return self.get('renderingengine_version')
+
+    def device_maker(self):
+        return self.get('device_maker')
+
+    def device_name(self):
+        return self.get('device_name')
+
+    def platform_description(self):
+        return self.get('platform_description')
+
+    def platform_version(self):
+        return self.get('platform_version')
+
+    def litemode(self):
+        return self.get('litemode')
 
     def supports(self, feature):
         to_return = self.get(feature, False)
@@ -95,13 +117,14 @@ class Browser(object):
         return self.supports('crawler')
 
     def is_mobile(self):
-        return self.supports('mobiledevice')
+        return self.supports('ismobiledevice')
 
     def is_syndication_reader(self):
-        return self.supports('syndicationreader')
+        return self.supports('issyndicationreader')
 
     def is_banned(self):
-        return self.supports('banned')
+        warnings.warn(u'This field was removed from csv browscap file', DeprecationWarning, stacklevel=2)
+        return None
 
     def is_alpha(self):
         return self.supports('alpha')

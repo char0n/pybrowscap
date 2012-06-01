@@ -33,7 +33,7 @@ setup(
     },
     platforms='any',
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
