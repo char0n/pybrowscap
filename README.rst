@@ -86,7 +86,7 @@ Special thanks to these projects for inspiration:
 References
 ----------
 
-- http://github.com/char0n/pybrowscap
+- http://github.com/CodeScaleInc/pybrowscap
 - http://browsers.garykeith.com/
 - http://php.net/get_browser
 - http://www.codescale.net/en/community#pybrowscap
