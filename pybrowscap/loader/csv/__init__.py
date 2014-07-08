@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 # Url where latest version of csv browscap data file is located
-URL = 'http://browsers.garykeith.com/stream.asp?BrowsCapCSV'
+URL = 'http://browscap.org/stream?q=BrowsCapCSV'
 
 
 def load_file(browscap_file_path):
