@@ -81,6 +81,7 @@ def load_file(browscap_file_path):
             except ValueError:
                 log.exception('Error while getting browscap file version')
                 version = None
+            log.info("Browscap Version: {}".format(version))
             log.info('Getting browscap file release date')
             try:
                 old_locale = locale.getlocale()
@@ -91,6 +92,7 @@ def load_file(browscap_file_path):
                 release_date = None
             finally:
                 locale.setlocale(locale.LC_TIME, old_locale)
+            log.info("Browscap Release Date: {}".format(release_date))
 
             log.info('Reading browscap user-agent data')
             reader = csv.DictReader(csvfile, dialect=dialect)
@@ -98,10 +100,10 @@ def load_file(browscap_file_path):
             browscap_data = {}
             regex_cache = []
             for line in reader:
-                if line['Parent'] == 'DefaultProperties':
-                    continue
-                if line['Parent'] == line['PropertyName']:
+                if line['PropertyName'] == 'DefaultProperties':
                     defaults = line
+                    continue
+                if line['Parent'] == 'DefaultProperties':
                     continue
                 line = replace_defaults(line, defaults)
                 try:
