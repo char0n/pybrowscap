@@ -8,7 +8,7 @@ from pybrowscap.loader import Downloader
 class DownloaderTest(unittest.TestCase):
 
     def setUp(self):
-        self.url = 'http://www.codescale.net/en/'
+        self.url = 'http://www.codescale.cz/'
         self.downloader = Downloader(self.url)
         self.new_file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'tmp'+'browscap_14_05_2012.csv')
 
@@ -25,11 +25,11 @@ class DownloaderTest(unittest.TestCase):
         self.downloader.get(self.new_file_path)
         with open(self.new_file_path, 'rb') as fp:
             contents = fp.read()
-        self.assertNotEqual(contents.find('Software Development Done Right'), -1)
+        self.assertNotEqual(contents.find('codescale'), -1)
 
     def test_download_get_contents(self):
         contents = self.downloader.get()
-        self.assertNotEqual(contents.find('Software Development Done Right'), -1)
+        self.assertNotEqual(contents.find('codescale'), -1)
 
     def test_download_no_url(self):
         with self.assertRaises(ValueError):
