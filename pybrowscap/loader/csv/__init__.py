@@ -45,20 +45,20 @@ def load_file(browscap_file_path):
         new_line = {}
         for feature, value in line.iteritems():
             if value == 'default' or value == '':
-                value = defaults[feature]
+                value = defaults.get(feature, value)
             if value == 'true':
                 value = True
             if value == 'false':
                 value = False
             if feature == 'MinorVer' and value == '0':
-                value = defaults[feature]
+                value = defaults.get(feature, value)
             if feature == 'MajorVer' or feature == 'MinorVer':
                 try:
                     value = int(value)
                 except (ValueError, OverflowError):
                     value = 0
             if (feature == 'Version' or feature == 'RenderingEngine_Version') and value == '0':
-                value = defaults[feature]
+                value = defaults.get(feature, value)
             if (feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version' or
                 feature == 'RenderingEngine_Version' or feature == 'Platform_Version'):
                 try:
