@@ -1,6 +1,9 @@
 import os
 import unittest
-import urllib2
+try:
+    from urllib2 import URLError, HTTPError
+except ImportError:
+    from urllib.error import URLError, HTTPError
 
 from pybrowscap.loader import Downloader
 
@@ -37,22 +40,22 @@ class DownloaderTest(unittest.TestCase):
             self.downloader.get()
 
     def test_download_invalid_url(self):
-        with self.assertRaises(urllib2.URLError):
+        with self.assertRaises(URLError):
             self.downloader.url = 'http://test'
             self.downloader.get()
 
     def test_download_invalid_proxy(self):
-        with self.assertRaises(urllib2.URLError):
+        with self.assertRaises(URLError):
             self.downloader.proxy = 'http://test'
             self.downloader.get()
 
     def test_download_timeout_error(self):
-        with self.assertRaises(urllib2.URLError):
+        with self.assertRaises(URLError):
             self.downloader.timeout = 0
             self.downloader.get()
 
     def test_download_http_error(self):
-        with self.assertRaises(urllib2.HTTPError):
+        with self.assertRaises(HTTPError):
             self.downloader.url += 'a' * 4
             self.downloader.get()
 

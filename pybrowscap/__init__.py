@@ -6,7 +6,7 @@ import warnings
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 
 class Error(Exception):

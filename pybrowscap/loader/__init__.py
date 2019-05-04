@@ -1,5 +1,9 @@
 import logging
-import urllib2
+try:
+    from urllib2 import build_opener, install_opener, ProxyHandler, URLError, HTTPError
+except ImportError:
+    from urllib.request import build_opener, install_opener, ProxyHandler
+    from urllib.error import URLError, HTTPError
 from datetime import datetime
 
 from pybrowscap import Browser
@@ -55,25 +59,25 @@ class Downloader(object):
         """
         try:
             log.info('Downloading latest version of browscap file from %s', self.url)
-            opener = urllib2.build_opener()
+            opener = build_opener()
             if self.proxy is not None:
                 log.info('Setting up proxy server %s' % self.proxy)
-                opener.add_handler(urllib2.ProxyHandler({'http': self.proxy}))
+                opener.add_handler(ProxyHandler({'http': self.proxy}))
                 if self.additional_handlers is not None:
                     for handler in self.additional_handlers:
                         opener.add_handler(handler)
             opener.addheaders = [('User-agent', 'pybrowscap downloader')]
-            urllib2.install_opener(opener)
+            install_opener(opener)
             response = opener.open(self.url, timeout=self.timeout)
             contents = response.read()
             response.close()
         except ValueError:
             log.exception('Url to browscap file is probably invalid')
             raise
-        except urllib2.URLError:
+        except URLError:
             log.exception('Something went wrong while processing urllib2 handlers')
             raise
-        except urllib2.HTTPError:
+        except HTTPError:
             log.exception('Something went wrong while downloading browscap file')
             raise
 

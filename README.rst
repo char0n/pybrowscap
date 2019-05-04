@@ -16,7 +16,7 @@ older version of csv browscap file, use pybrowscap version lower than 2.0.
 Requirements
 ------------
 
-- python 2.6+
+- python 2.6+ or pythone 3+
 - browscap.csv (browscap data file in csv format)
 
 
@@ -24,7 +24,7 @@ Instalation
 -----------
 
 Install via pypi or copy this module into your project or into your PYTHON_PATH.
-Download latest version of browscap.csv file from http://browsers.garykeith.com/downloads.asp.
+Download latest version of browscap.csv file from http://browscap.org/stream?q=BrowsCapCSV
 
 
 Example
@@ -53,11 +53,12 @@ Tests
 
 **Tested on evnironment**
 
-- Xubuntu Linux 12.04 LTS precise 64-bit
-- python 2.7.3
+- Ubuntu Linux 16.04 LTS precise 64-bit
+- python 2.7.3 and python3.5
 - python unitest
 - browscap_14_05_2012.csv from Mon, 14 May 2012 22:20:20 -0000
-- browscap.21_05_2012.csv from Mon, 21 May 2012 15:48:39 -0000"
+- browscap.21_05_2012.csv from Mon, 21 May 2012 15:48:39 -0000
+- browscap.29_11_2018.csv from Thr, 29 Nov 2018 08:50:14 +0000
 
 **Running tests**
 

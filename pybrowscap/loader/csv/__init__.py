@@ -7,7 +7,7 @@ from datetime import datetime
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from pybrowscap.loader import Browscap, TYPE_CSV
 
@@ -43,38 +43,49 @@ def load_file(browscap_file_path):
 
         """
         new_line = {}
-        for feature, value in line.iteritems():
+        try:
+            items = line.iteritems()
+        except AttributeError:
+            items = line.items()
+        for feature, value in items:
+            feature = feature.lower()
             if value == 'default' or value == '':
                 value = defaults.get(feature, value)
             if value == 'true':
                 value = True
             if value == 'false':
                 value = False
-            if feature == 'MinorVer' and value == '0':
+            if feature == 'minorver' and value == '0':
                 value = defaults.get(feature, value)
-            if feature == 'MajorVer' or feature == 'MinorVer':
+            if feature == 'majorver' or feature == 'minorver':
                 try:
                     value = int(value)
                 except (ValueError, OverflowError):
                     value = 0
-            if (feature == 'Version' or feature == 'RenderingEngine_Version') and value == '0':
+            if (feature == 'version' or feature == 'renderingengine_version') and value == '0':
                 value = defaults.get(feature, value)
-            if (feature == 'CSSVersion' or feature == 'AolVersion' or feature == 'Version' or
-                feature == 'RenderingEngine_Version' or feature == 'Platform_Version'):
+            if (feature == 'cssversion' or feature == 'aolversion' or feature == 'version' or
+                feature == 'renderingengine_version' or feature == 'platform_version'):
                 try:
                     value = float(value)
                 except (ValueError, OverflowError):
                     value = float(0)
             new_line[feature.lower()] = value
         return new_line
+
     try:
-        with open(browscap_file_path, 'rb') as csvfile:
+        with open(browscap_file_path, 'r') as csvfile:
+            # in py3 
+            # mode='rb', read return bytes
+            # mode='r' , read return str
             log.info('Reading browscap source file %s', browscap_file_path)
             dialect = csv.Sniffer().sniff(csvfile.read(4096))
             csvfile.seek(0)
             log.info('Getting file version and release date')
             csvfile.readline()
-            line = csv.reader(StringIO(csvfile.readline())).next()
+            reader = csv.reader(StringIO(csvfile.readline()))
+            for line in reader:     # read version and date to line
+                break
             log.info('Getting browcap file version')
             try:
                 version = int(line[0])
@@ -99,19 +110,20 @@ def load_file(browscap_file_path):
             defaults = {}
             browscap_data = {}
             regex_cache = []
+
             for line in reader:
                 if line['PropertyName'] == 'DefaultProperties':
-                    defaults = line
-                    continue
-                if line['Parent'] == 'DefaultProperties':
-                    continue
+                    for key in line:
+                        defaults[key.lower()] = line[key]       # turn defaults key to lower
+                    break
+            for line in reader:
                 line = replace_defaults(line, defaults)
                 try:
                     ua_regex = '^{0}$'.format(re.escape(line['propertyname']))
                     ua_regex = ua_regex.replace('\\?', '.').replace('\\*', '.*?')
                     browscap_data[ua_regex] = line
                     log.debug('Compiling user agent regex: %s', ua_regex)
-                    regex_cache.append(re.compile(ua_regex))
+                    regex_cache.append(re.compile(ua_regex,re.IGNORECASE))
                 except sre_constants.error:
                     continue
         return Browscap(browscap_data, regex_cache, browscap_file_path, TYPE_CSV,
